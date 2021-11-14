@@ -40,5 +40,14 @@ fun Application.configureStatusPages() {
         exception<JsonSyntaxException> {
             call.respond(HttpStatusCode.BadRequest, Response("Malformed request"))
         }
+
+        // if there is a missing property that is required, we will get an exception
+        // saying that we cannot set null value to a nun-nullable column in our table
+
+        // NOTE: if there is a missing property in the request body, it will be mapped as null
+        // since well, it does not exist
+        exception<IllegalArgumentException> {
+            call.respond(HttpStatusCode.BadRequest, Response("Malformed request"))
+        }
     }
 }
