@@ -1,5 +1,6 @@
 package com.example.student
 
+import com.example.response.Response
 import com.example.student.dto.StudentDto
 import com.example.student.service.StudentService
 import io.ktor.application.*
@@ -21,7 +22,8 @@ fun Route.studentRoutes() {
 
     post("/student") {
         val studentRequest = call.receive<StudentDto>()
-        call.respond(service.addStudent(studentRequest))
+        val generatedId = service.addStudent(studentRequest)
+        call.respond(Response("Student with id $generatedId created"))
     }
 
     put("/student/{id}") {
@@ -29,13 +31,13 @@ fun Route.studentRoutes() {
         val studentRequest = call.receive<StudentDto>()
 
         service.updateStudent(id!!, studentRequest)
-        call.respondText("Student updated")
+        call.respond(Response("Student with id $id updated"))
     }
 
     delete("/student/{id}") {
         val id = call.parameters["id"]?.toLong()
 
         service.deleteStudent(id!!)
-        call.respondText("Student deleted")
+        call.respond(Response("Student with id $id deleted"))
     }
 }
