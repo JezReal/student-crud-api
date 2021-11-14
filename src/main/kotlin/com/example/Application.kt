@@ -10,8 +10,10 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
+    // call all the plugins that we install here
     Configuration.setEnvironment(environment)
     connectToDatabase()
+    configureStatusPages()
     configureRouting()
     configureSerialization()
 }
