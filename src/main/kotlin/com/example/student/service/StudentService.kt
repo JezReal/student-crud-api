@@ -1,5 +1,6 @@
 package com.example.student.service
 
+import com.example.exception.IdNotFoundException
 import com.example.student.dto.StudentDto
 import com.example.student.dto.StudentWithIdDto
 import com.example.student.model.toStudentDto
@@ -15,7 +16,9 @@ object StudentService {
     }
 
     fun getStudentById(id: Long): StudentDto {
-        return repository.getStudentById(id)!!.toStudentDto()
+        //if the repository returned a null value, it means that the id does not exist
+        //in which case we will throw an exception which says that the given id does not exist
+        return repository.getStudentById(id)?.toStudentDto() ?: throw IdNotFoundException(id)
     }
 
     fun addStudent(studentDto: StudentDto): Long {
@@ -23,10 +26,14 @@ object StudentService {
     }
 
     fun updateStudent(id: Long, studentDto: StudentDto) {
+        // check if a student with the given id exists.
+        // if not, throw an exception
+        repository.getStudentById(id) ?: throw IdNotFoundException(id)
         repository.updateStudent(id, studentDto)
     }
 
     fun deleteStudent(id: Long) {
+        repository.getStudentById(id) ?: throw IdNotFoundException(id)
         repository.deleteStudent(id)
     }
 }
