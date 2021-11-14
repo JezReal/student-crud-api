@@ -21,11 +21,17 @@ fun Application.configureStatusPages() {
         // if we ever raise an IdNotFoundException, this is what will handle the exception
         exception<IdNotFoundException> { exception ->
             // we can attach a status code to our response by simply setting the first parameter
-            // of the respond method to our status code and the second parameter to be the
+            // of the respond function to our status code and the second parameter to be the
             // response body which could either be just text or JSON object
 
             // in this case, we once again used the response object
             call.respond(HttpStatusCode.NotFound, Response(exception.message))
+        }
+
+        // if the id that we pass to endpoints that require an id is not a number,
+        // we'll throw a Bad Request response
+        exception<NumberFormatException> {
+            call.respond(HttpStatusCode.BadRequest, Response("Malformed request"))
         }
     }
 }
