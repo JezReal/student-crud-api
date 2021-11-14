@@ -2,6 +2,7 @@ package com.example.plugins
 
 import com.example.exception.IdNotFoundException
 import com.example.response.Response
+import com.google.gson.JsonSyntaxException
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -31,6 +32,12 @@ fun Application.configureStatusPages() {
         // if the id that we pass to endpoints that require an id is not a number,
         // we'll throw a Bad Request response
         exception<NumberFormatException> {
+            call.respond(HttpStatusCode.BadRequest, Response("Malformed request"))
+        }
+
+        // if the JSON request was not formatted properly, we will once again throw a
+        // Bad Request response
+        exception<JsonSyntaxException> {
             call.respond(HttpStatusCode.BadRequest, Response("Malformed request"))
         }
     }
